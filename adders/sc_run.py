@@ -26,7 +26,7 @@ LZ4_PREFIXES = ("/opt/homebrew/opt/lz4", "/usr/local/opt/lz4")
 
 VERILATOR_WARNINGS_OFF = [
     "-Wno-WIDTHEXPAND", "-Wno-WIDTHTRUNC", "-Wno-CASEINCOMPLETE",
-    "-Wno-UNOPTFLAT", "-Wno-TIMESCALEMOD", "-Wno-IEEEMAYDEPRECATE", "-Wno-LATCH",
+    "-Wno-UNOPTFLAT", "-Wno-TIMESCALEMOD", "-Wno-LATCH",
 ]
 
 TOPMODULE = "adders_tb"
@@ -99,3 +99,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
