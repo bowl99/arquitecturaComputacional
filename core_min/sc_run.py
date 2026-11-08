@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Compila y corre el testbench de esta carpeta con SiliconCompiler,
+"""Compilen y corran el testbench de esta carpeta con SiliconCompiler,
 usando Verilator como motor de simulacion y generando una onda .fst
 para verla con Surfer.
 
-Corre core_min_tb: el nucleo RV32I minimo (ProcessorCoreMin) que
+Corran core_min_tb: el nucleo RV32I minimo (ProcessorCoreMin) que
 ejecuta add/sub/addi de principio a fin.
 
 Uso:

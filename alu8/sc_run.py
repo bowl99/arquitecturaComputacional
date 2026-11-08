@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compila y corre el testbench de esta carpeta con SiliconCompiler,
+"""Compilen y corran el testbench de esta carpeta con SiliconCompiler,
 usando Verilator como motor de simulacion y generando una onda para
 verla con Surfer.
 
