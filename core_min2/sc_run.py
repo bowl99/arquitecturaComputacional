@@ -20,12 +20,13 @@ Uso:
 """
 import argparse
 import os
+import re
 import subprocess
+import sys
 
 from siliconcompiler import Design, Sim, Flowgraph
 from siliconcompiler.tools.verilator import compile as verilator_compile
 from siliconcompiler.tools.verilator.compile import CompileTask
-from siliconcompiler.tools.execute.exec_input import ExecInputTask
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -79,6 +80,18 @@ def _configure_verilator_task(project):
             break
 
 
+def _run_executable(vexe_path):
+    """Corre el .vexe con cwd=HERE, igual que los targets de make (`cd
+    core_min2 && ...`), para que $readmemh encuentre los .hex por su
+    ruta relativa. Sin esto, SiliconCompiler corre el binario desde su
+    propio directorio de build y $readmemh truena con 'file not found'."""
+    result = subprocess.run([vexe_path], cwd=HERE, capture_output=True, text=True)
+    print(result.stdout, end="")
+    if result.stderr:
+        print(result.stderr, end="", file=sys.stderr)
+    return re.search(r"^FAIL:", result.stdout, re.MULTILINE) is None
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tb", choices=sorted(BLOCKS), default="jump", help="bloque a correr (default: jump)")
@@ -100,8 +113,6 @@ def main():
 
     flow = Flowgraph(f"core_min2_{args.tb}_sim")
     flow.node("compile", verilator_compile.CompileTask())
-    flow.node("simulate", ExecInputTask())
-    flow.edge("compile", "simulate")
     project.set_flow(flow)
 
     _configure_verilator_task(project)
@@ -109,13 +120,18 @@ def main():
     project.run()
     project.summary()
 
+    vexe = project.find_result(step="compile", index="0", directory="outputs",
+                               filename=f"{topmodule}.vexe")
+    passed = _run_executable(vexe)
+
     if args.wave:
-        fst = project.find_result(step="simulate", index="0", directory=".",
-                                  filename=f"{topmodule}.fst")
-        if fst:
+        fst = os.path.join(HERE, f"{topmodule}.fst")
+        if os.path.exists(fst):
             project.show(fst)
         else:
             print(f"No se encontro la onda {topmodule}.fst")
+
+    sys.exit(0 if passed else 1)
 
 
 if __name__ == "__main__":

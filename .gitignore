@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 build/
 *.fst
 !/adders/waveform.fst
@@ -10,11 +9,4 @@ build/
 !/alu8/waveform.vcd
 __pycache__/
 *.pyc
-=======
-build/
-*.fst
-!/waveform.fst
-*.vcd
-__pycache__/
-*.pyc
->>>>>>> Stashed changes
+core_full/fpga/_copy_hex_generated.tcl
